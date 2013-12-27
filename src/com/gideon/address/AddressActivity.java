@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Context;
@@ -77,11 +80,16 @@ public class AddressActivity extends Activity {
     public void postData(String la, String lo) {
 		// Create a new HttpClient and Post Header
 		HttpClient httpclient = new DefaultHttpClient();
-		HttpGet  htget = new HttpGet("http://54.200.84.125/test.php"+la+"/"+lo);
+		HttpPost  httppost = new HttpPost("http://54.200.84.125/test.php");
 
 		try {
 			// Execute HTTP Post Request
-			HttpResponse response = httpclient.execute(htget);
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("la",la));
+			nameValuePairs.add(new BasicNameValuePair("lo",lo));
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			
+			HttpResponse response = httpclient.execute(httppost);
 			String resp = response.getStatusLine().toString();
 			Toast.makeText(this, resp, 5000).show();
 
